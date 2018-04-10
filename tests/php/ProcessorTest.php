@@ -30,6 +30,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($this->expected, Processor::exec(1, 15));
         $this->assertEquals($this->expected, Processor::execTo(15));
+
         $this->assertEquals(['one'], Processor::exec(1, 1));
         $this->assertEquals(['fifteen fizz buzz'], Processor::exec(15, 15));
 
@@ -52,11 +53,28 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedEchoes, $output);
     }
 
+    public function testReverse()
+    {
+        $reverse = array_reverse($this->expected);
+        $this->assertEquals($reverse, Processor::exec(15, 1));
+
+        // add one for the trailing EOL character
+        $expectedEchoes = implode(PHP_EOL, $reverse) . PHP_EOL;
+
+        // Capture the echo output to a variable
+        ob_start();
+        Processor::exec(15, 1, true);
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals($expectedEchoes, $output);
+    }
+
     /**
-     * @param       $from
-     * @param       $to
+     * @param           $from
+     * @param           $to
      *
-     * @dataProvider notIntegersProvider
+     * @dataProvider    notIntegersProvider
      */
     public function testNotIntegers($from, $to)
     {
@@ -74,15 +92,15 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
             [1.0, 15.0],
             ["1", "15"],
             ["one", 15],
-            [[1], [15]]
+            [[1], [15]],
         ];
     }
 
     /**
-     * @dataProvider outsideRangeProvider
+     * @dataProvider                outsideRangeProvider
      *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Value passed must be between 1 and 100
+     * @expectedException           \InvalidArgumentException
+     * @expectedExceptionMessage    Value passed must be between 1 and 100
      */
     public function testOutsideRange($start, $end)
     {

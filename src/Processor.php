@@ -15,32 +15,42 @@ class Processor
      *
      * If the $log parameter is passed as true, the output will be echoed as well as returned
      *
-     * @param int   $start  First number to process
-     * @param int   $end    Last number to process
-     * @param bool  $log    Whether or not to log the output
+     * @param   int   $start  First number to process
+     * @param   int   $end    Last number to process
+     * @param   bool  $log    Whether or not to log the output
      *
-     * @return string[]
+     * @return  string[]
      */
     public static function exec(int $start, int $end, bool $log = false) : array
     {
         self::validate($start);
         self::validate($end);
 
+        $smallest = min($start, $end);
+        $largest = max($start, $end);
+
         $output = [];
+
         // transform the raw integer into the equivalent English words e.g. 1 => one
         $formatter = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
 
-        for ($i = $start; $i <= $end; ++$i)
-        {
+        for ($i = $smallest; $i <= $largest; ++$i) {
             $string = $formatter->format($i);
             $string .= ($i % 3 == 0) ? " fizz" : "";
             $string .= ($i % 5 == 0) ? " buzz" : "";
 
-            if ($log) {
-                self::log($string);
-            }
-
             $output[] = $string;
+        }
+
+        // if we are counting down rather than up, we need to turn the array around
+        if ($smallest !== $start) {
+            $output = array_reverse($output);
+        }
+
+        if ($log) {
+            foreach ($output as $line) {
+                self::log($line);
+            }
         }
 
         return $output;
@@ -49,10 +59,10 @@ class Processor
     /**
      * Helper method for most common use-case of exec (start at 1)
      *
-     * @param int   $end    Last number to process
-     * @param bool  $log    Whether or not to log the output
+     * @param   int   $end    Last number to process
+     * @param   bool  $log    Whether or not to log the output
      *
-     * @return string[]
+     * @return  string[]
      */
     public static function execTo(int $end, bool $log = false) : array
     {
@@ -63,9 +73,9 @@ class Processor
     /**
      * Validate that our start and end are between 1 and 100
      *
-     * @param int $integer
+     * @param   int $integer
      *
-     * @throws \InvalidArgumentException
+     * @throws  \InvalidArgumentException
      */
     public static function validate(int $integer)
     {
