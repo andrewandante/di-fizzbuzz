@@ -6,6 +6,7 @@
 
 - PHP 7
 - Composer
+- php-intl extension
 
 ## Installation
 

@@ -1,31 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewAndante\DIFizzBuzz\Tests;
 
 use AndrewAndante\DIFizzBuzz\Processor;
 
 class ProcessorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testExec()
-    {
-        $expected = [
-            'one',
-            'two',
-            'three fizz',
-            'four',
-            'five buzz',
-            'six fizz',
-            'seven',
-            'eight',
-            'nine fizz',
-            'ten buzz',
-            'eleven',
-            'twelve fizz',
-            'thirteen',
-            'fourteen',
-            'fifteen fizz buzz',
-        ];
+    private $expected = [
+        'one',
+        'two',
+        'three fizz',
+        'four',
+        'five buzz',
+        'six fizz',
+        'seven',
+        'eight',
+        'nine fizz',
+        'ten buzz',
+        'eleven',
+        'twelve fizz',
+        'thirteen',
+        'fourteen',
+        'fifteen fizz buzz',
+    ];
 
-        $this->assertEquals($expected, Processor::exec(1, 15));
+    public function testSimpleExec()
+    {
+        $this->assertEquals($this->expected, Processor::exec(1, 15));
+        $this->assertEquals($this->expected, Processor::execTo(15));
     }
+
+    public function testSimpleExecWithLogging()
+    {
+        // add one for the trailing EOL character
+        $expectedEchoes = implode(PHP_EOL, $this->expected) . PHP_EOL;
+
+        // Capture the echo output to a variable
+        ob_start();
+        Processor::exec(1, 15, true);
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals($expectedEchoes, $output);
+    }
+
+    /**
+     * @param       $from
+     * @param       $to
+     *
+     * @dataProvider notIntegersProvider
+     */
+    public function testNotIntegers($from, $to)
+    {
+        try {
+            Processor::exec($from, $to);
+        } catch (\Error $error) {
+            $this->assertInstanceOf(\TypeError::class, $error);
+        }
+    }
+
+    public static function notIntegersProvider()
+    {
+        return [
+            ["one", "fifteen"],
+            [1.0, 15.0],
+            ["1", "15"],
+            ["one", 15],
+            [[1], [15]]
+        ];
+    }
+
 }
