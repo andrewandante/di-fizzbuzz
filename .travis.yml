@@ -1,0 +1,13 @@
+language: php
+
+matrix:
+  include:
+    - php: 7.1
+
+before_script:
+  # Install composer dependencies
+  - composer validate
+  - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
+
+script:
+  - vendor/bin/phpunit

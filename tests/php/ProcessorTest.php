@@ -25,6 +25,6 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         fifteen fizz buzz
         ";
 
-        $this->assertEquals($expected, Processor::exec(15));
+        $this->assertEquals($expected, Processor::exec(1, 15));
     }
 }
