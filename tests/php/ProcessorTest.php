@@ -95,7 +95,8 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
             [0, 15],
             [1, 101],
             [-1, 15],
-            [1, -15]
+            [1, -15],
+            [-1, 101],
         ];
     }
 

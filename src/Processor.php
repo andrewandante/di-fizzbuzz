@@ -9,6 +9,12 @@ class Processor
     /**
      * Primary execution class.
      *
+     * Will return an array of spelled-out numbers, with the following appended:
+     *   - if the integer is divisible by 3, it will have "fizz" appended
+     *   - if the integer is divisible by 5, it will have "buzz" appended
+     *
+     * If the $log parameter is passed as true, the output will be echoed as well as returned
+     *
      * @param int   $start  First number to process
      * @param int   $end    Last number to process
      * @param bool  $log    Whether or not to log the output
@@ -21,7 +27,9 @@ class Processor
         self::validate($end);
 
         $output = [];
+        // transform the raw integer into the equivalent English words e.g. 1 => one
         $formatter = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
+
         for ($i = $start; $i <= $end; ++$i)
         {
             $string = $formatter->format($i);
@@ -39,7 +47,7 @@ class Processor
     }
 
     /**
-     * Helper method for most common use-case (start at 1)
+     * Helper method for most common use-case of exec (start at 1)
      *
      * @param int   $end    Last number to process
      * @param bool  $log    Whether or not to log the output
