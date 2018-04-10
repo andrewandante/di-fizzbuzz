@@ -17,6 +17,9 @@ class Processor
      */
     public static function exec(int $start, int $end, bool $log = false) : array
     {
+        self::validate($start);
+        self::validate($end);
+
         $output = [];
         $formatter = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
         for ($i = $start; $i <= $end; ++$i)
@@ -46,6 +49,21 @@ class Processor
     public static function execTo(int $end, bool $log = false) : array
     {
         return self::exec(1, $end, $log);
+    }
+
+
+    /**
+     * Validate that our start and end are between 1 and 100
+     *
+     * @param int $integer
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function validate(int $integer)
+    {
+       if ($integer > 100 || $integer < 1) {
+           throw new \InvalidArgumentException('Value passed must be between 1 and 100');
+       }
     }
 
     /**

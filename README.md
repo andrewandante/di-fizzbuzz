@@ -12,3 +12,6 @@
 
 Run `composer install` to bring in the required dependencies.
 
+## Tests
+
+Run `vendor/bin/phpunit`

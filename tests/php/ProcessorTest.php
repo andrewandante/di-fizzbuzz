@@ -30,6 +30,12 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($this->expected, Processor::exec(1, 15));
         $this->assertEquals($this->expected, Processor::execTo(15));
+        $this->assertEquals(['one'], Processor::exec(1, 1));
+        $this->assertEquals(['fifteen fizz buzz'], Processor::exec(15, 15));
+
+        $headlessExpected = array_slice($this->expected, 1);
+        $this->assertEquals($headlessExpected, Processor::exec(2, 15));
+
     }
 
     public function testSimpleExecWithLogging()
@@ -69,6 +75,27 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
             ["1", "15"],
             ["one", 15],
             [[1], [15]]
+        ];
+    }
+
+    /**
+     * @dataProvider outsideRangeProvider
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Value passed must be between 1 and 100
+     */
+    public function testOutsideRange($start, $end)
+    {
+        Processor::exec($start, $end);
+    }
+
+    public static function outsideRangeProvider()
+    {
+        return [
+            [0, 15],
+            [1, 101],
+            [-1, 15],
+            [1, -15]
         ];
     }
 
