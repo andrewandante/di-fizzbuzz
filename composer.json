@@ -3,7 +3,8 @@
   "description": "FizzBuzz Technical Test for Data Interconnect",
   "require": {
     "php": ">=7",
-    "phpunit/phpunit": "^5.7"
+    "phpunit/phpunit": "^5.7",
+    "ext-intl": "*"
   },
   "autoload": {
     "psr-4": {
